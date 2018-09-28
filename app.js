@@ -1,14 +1,26 @@
 const express =require("express")
 const morgan= require("morgan")
+const bodyParser = require ("body-parser")
 const app = express();
 const {router,hmd} = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
 //console.log("test export", hmd)
 
-// morgan : logger screen (dev,combined)
-app.use(morgan('dev'));
+ app.use(bodyParser.urlencoded({ extended: false }));
+    /* 
+        const product = {
+          price: req.body.price
+                        };
 
+    */
+  app.use(bodyParser.json());
+ /* 
+  read variable propriete in json object
+  name: req.body.name
+ */
+// morgan : logger screen (dev,combined)
+ app.use(morgan('dev'));
 
 // Routes which should handle requests
 app.use('/products', router);
