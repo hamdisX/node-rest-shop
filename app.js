@@ -1,17 +1,18 @@
 const express =require("express")
 const morgan= require("morgan")
 const bodyParser = require ("body-parser")
+const mongoose = require("mongoose");
 const app = express();
 const {router,hmd} = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
-//console.log("test export", hmd)
-
+mongoose.connect('mongodb+srv://amdi:'+process.env.MONGO_ATLAS_PW +'@node-rest-api-qiavb.mongodb.net/test?retryWrites=true'
+)
  app.use(bodyParser.urlencoded({ extended: false }));
     /* 
         const product = {
           price: req.body.price
-                        };
+         };
 
     */
   app.use(bodyParser.json());
