@@ -5,17 +5,34 @@ const mongoose = require ("mongoose")
 
 router.get('/', (req, res, next) => {
     Product.find()
+    .select("name price _id")
     .exec()
     .then(docs => {
-      console.log(docs);
-      res.status(200).json(docs);
+      const response={
+        count:docs.length,
+        product:docs.map(n=>{
+          return {
+            name:n.name,
+            price:n.price,
+            _id: n._id,
+            request: {
+              type: "GET",
+              url: "http://localhost:3000/products/" + n._id
+          }
+        }})
+      }
+      res.status(200).json(response);
 }) .catch(err => {
       console.log(err);
       res.status(500).json({
         error: err
       });
     });
+ 
+
 });
+
+
 
 
 router.post("/", (req, res, next) => {
@@ -27,9 +44,8 @@ router.post("/", (req, res, next) => {
   product
     .save()
     .then(rsl => {
-      console.log(rsl);
       res.status(201).json({
-        message: "Handling POST requests to /products",
+        message: "product added successfully",
         createdProduct: rsl
       });
     })
