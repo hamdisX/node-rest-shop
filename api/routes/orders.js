@@ -5,7 +5,7 @@ const Product = require("../models/product")
 const Order = require("../models/orders")
 
 router.get('/', (req, res, next) => {
-    Order.find().populate("product").select("product.name").then(
+    Order.find().populate("product","name").select("product.name").then(
         orders=>{
             res.status(200).json(
                 {

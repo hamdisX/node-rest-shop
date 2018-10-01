@@ -26,6 +26,7 @@ mongoose.set('useCreateIndex', true);
  */
 // morgan : logger screen (dev,combined)
  app.use(morgan('dev'));
+ app.use('/uploads', express.static('uploads'));
 
 // Routes which should handle requests
 app.use('/products', router);
