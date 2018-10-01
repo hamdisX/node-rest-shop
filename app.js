@@ -8,7 +8,8 @@ const orderRoutes = require('./api/routes/orders');
 
 mongoose.connect('mongodb+srv://amdi:'+process.env.MONGO_ATLAS_PW +'@node-rest-api-qiavb.mongodb.net/test?retryWrites=true'
 ,{ useCreateIndex: true,
-    useNewUrlParser: true })
+    useNewUrlParser: true,
+    autoIndex: false })
 mongoose.set('useCreateIndex', true);
 
  app.use(bodyParser.urlencoded({ extended: false }));
