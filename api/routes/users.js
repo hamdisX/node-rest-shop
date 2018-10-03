@@ -74,7 +74,7 @@ router.post("/login", (req, res) => {
                 if(result==true){
                 console.log('process.env.JWT_KEY',process.env.JWT_KEY)
                 console.log('process.env.JWT_KEY',process.env.MONGO_ATLAS_PW)
-                const token =jwt.sign({userId:user[0]._id,email:user[0].email},"process.env.JWT_KEY",{expiresIn:"1h"})
+                const token =jwt.sign({userId:user[0]._id,email:user[0].email},"secret",{expiresIn:"1h"})
                 res.status(200).json({
                     "token": token
                 })}else{
