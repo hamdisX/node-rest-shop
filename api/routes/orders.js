@@ -1,70 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require("mongoose")
-const Product = require("../models/product")
-const Order = require("../models/orders")
 const checkAuth = require('../midlware/check-auth')
-router.get('/',checkAuth, (req, res, next) => {
-    Order.find().populate("product","name").select("product.name").then(
-        orders=>{
-            res.status(200).json(
-                {
-                    orders
-                }
-            )
-        }
-    )
-});
+const OrdersController = require('../controllers/orders')
+
+router.get('/',checkAuth, OrdersController.orders_get);
 
 
-
-router.post("/",checkAuth, (req, res, next) => {
-    Product.findById(req.body.productId)
-      .then(product => {
-        if (!product) {
-          return res.status(404).json({
-            message: "Product not found"
-          });
-        }
-        const order = new Order({
-          _id: mongoose.Types.ObjectId(),
-          quantity: req.body.quantity,
-          product: req.body.productId
-        });
-        return order.save();
-      }).then(
-          rslt=>{
-              res.status(202).json({
-                
-                result:rslt
-              })
-          }
-      )
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({
-          error: err
-        });
-      });
-  });
+router.post("/",checkAuth, OrdersController.orders_post);
 
 
+router.get('/:orderId',checkAuth, OrdersController.orders_getById);
 
-
-
-
-router.get('/:orderId',checkAuth, (req, res, next) => {
-    res.status(200).json({
-        message: 'Order details',
-        orderId: req.params.orderId
-    });
-});
-
-router.delete('/:orderId', checkAuth,(req, res, next) => {
-    res.status(200).json({
-        message: 'Order deleted',
-        orderId: req.params.orderId
-    });
-});
+router.delete('/:orderId', checkAuth,OrdersController.orders_delete);
 
 module.exports = router;

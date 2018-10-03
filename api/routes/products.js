@@ -4,6 +4,7 @@ const Product = require("../models/product")
 const mongoose = require ("mongoose")
 const multer = require('multer');
 const checkAuth = require('../midlware/check-auth')
+const ProductController = require('../controllers/products')
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, 'uploads/');
@@ -32,83 +33,15 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-router.get('/',checkAuth, (req, res, next) => {
-  console.log("req1 ",req.cookies)
-    Product.find()
-    .select("name price _id")
-    .exec()
-    .then(docs => {
-      const response={
-        count:docs.length,
-        product:docs.map(n=>{
-          return {
-            name:n.name,
-            price:n.price,
-            _id: n._id,
-            request: {
-              type: "GET",
-              url: "http://localhost:3000/products/" + n._id
-          }
-        }})
-      }
-      res.status(200).json(response);
-}) .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
-    });
- 
-
-});
+router.get('/',checkAuth,ProductController.products_get );
 
 
 
 
-router.post("/",checkAuth,upload.single("productImage"), (req, res, next) => {
-  //console.log(req.file)
-  const product = new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price,
-    productImage: req.file.path
-  });
-  product
-    .save()
-    .then(rsl => {
-      res.status(201).json({
-        message: "product added successfully",
-        createdProduct: rsl
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        err: err
-      });
-    });
-});
+router.post("/",checkAuth,upload.single("productImage"), ProductController.products_post);
 
 
-router.get("/:productId",checkAuth, (req, res, next) => {
-  const id = req.params.productId;
-  Product.findById(id)
-    .exec()
-    .then(doc => {
-      console.log("From database", doc);
-      if (doc) {
-        res.status(200).json(doc);
-      } else {
-        res
-          .status(404)
-          .json({ message: "No valid entry found for provided ID" });
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({ error: err });
-    });
-});
+router.get("/:productId",checkAuth, ProductController.products_getById);
 
 
 
@@ -119,20 +52,7 @@ router.patch('/:productId',checkAuth, (req, res, next) => {
 });
 
 
-router.delete("/:productId",checkAuth, (req, res, next) => {
-  const id = req.params.productId;
-  Product.remove({ _id: id })
-    .exec()
-    .then(result => {
-      res.status(200).json(result);
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
-    });
-});
+router.delete("/:productId",checkAuth, ProductController.products_delete);
 
 
 const hmd="hmd"
