@@ -32,6 +32,7 @@ const upload = multer({
 });
 
 router.get('/', (req, res, next) => {
+  console.log("req1 ",req.cookies)
     Product.find()
     .select("name price _id")
     .exec()
@@ -64,7 +65,7 @@ router.get('/', (req, res, next) => {
 
 
 router.post("/",upload.single("productImage"), (req, res, next) => {
-  console.log(req.file)
+  //console.log(req.file)
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
@@ -82,7 +83,7 @@ router.post("/",upload.single("productImage"), (req, res, next) => {
     .catch(err => {
       console.log(err);
       res.status(500).json({
-        error: err
+        err: err
       });
     });
 });

@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const app = express();
 const {router,hmd} = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
-
+const userRoute = require('./api/routes/users')
 mongoose.connect('mongodb+srv://amdi:'+process.env.MONGO_ATLAS_PW +'@node-rest-api-qiavb.mongodb.net/test?retryWrites=true'
 ,{ useCreateIndex: true,
     useNewUrlParser: true,
@@ -17,7 +17,6 @@ mongoose.set('useCreateIndex', true);
         const product = {
           price: req.body.price
          };
-
     */
   app.use(bodyParser.json());
  /* 
@@ -27,11 +26,10 @@ mongoose.set('useCreateIndex', true);
 // morgan : logger screen (dev,combined)
  app.use(morgan('dev'));
  app.use('/uploads', express.static('uploads'));
-
 // Routes which should handle requests
 app.use('/products', router);
 app.use('/orders', orderRoutes);
-
+app.use("/user",userRoute)
 app.use((req, res, next) => {
     const error = new Error('Not found');
     error.status = 404;
@@ -49,4 +47,4 @@ app.use((error, req, res, next) => {
 });
 
 
-module.exports= app ;
+module.exports= app 
