@@ -19,7 +19,8 @@ exports.user_signup= (req, res, next) => {
                     })
                 else {
                     const user = new UserModel({
-                        _id: new mongoose.Types.ObjectId(),
+                        id: new mongoose.Types.ObjectId(),
+                        username:req.body.username,
                         email: req.body.email,
                         password: hash
                     })
@@ -88,3 +89,33 @@ exports.user_login= (req, res) => {
         .catch(err => res.status(500).json(err))
 }
 
+
+
+exports.user_get=(req,res)=>{
+    UserModel.find({}).sort('id').then(usr=>{
+        res.status(200).json(
+            usr
+        )
+    }).catch(err=>res.status(401).json({err}))
+}
+
+
+exports.user_getById=(req, res, next) => {
+    const id = req.params.usrId;
+    UserModel.find({id:id})
+      .exec()
+      .then(doc => {
+        console.log("From database", doc);
+        if (doc) {
+          res.status(200).json(doc);
+        } else {
+          res
+            .status(404)
+            .json({ message: "No valid entry found for provided ID" });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: err });
+      });
+  }

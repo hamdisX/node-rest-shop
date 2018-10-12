@@ -25,6 +25,19 @@ mongoose.set('useCreateIndex', true);
  */
 // morgan : logger screen (dev,combined)
  app.use(morgan('dev'));
+ 
+ app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+    return res.status(200).json({});
+  }
+  next();
+});
  app.use('/uploads', express.static('uploads'));
 // Routes which should handle requests
 app.use('/products', router);

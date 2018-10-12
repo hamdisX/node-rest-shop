@@ -19,7 +19,7 @@ exports.products_get=(req, res, next) => {
               _id: n._id,
               request: {
                 type: "GET",
-                url: "http://localhost:3000/products/" + n._id
+                url: "http://localhost:5000/products/" + n._id
             }
           }})
         }
