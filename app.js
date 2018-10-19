@@ -5,7 +5,9 @@ const mongoose = require("mongoose");
 const app = express();
 const {router,hmd} = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
-const userRoute = require('./api/routes/users')
+const userRoute = require('./api/routes/users');
+const postrRoute = require('./api/routes/posts')
+
 mongoose.connect('mongodb+srv://amdi:'+process.env.MONGO_ATLAS_PW +'@node-rest-api-qiavb.mongodb.net/test?retryWrites=true'
 ,{ useCreateIndex: true,
     useNewUrlParser: true,
@@ -42,7 +44,10 @@ mongoose.set('useCreateIndex', true);
 // Routes which should handle requests
 app.use('/products', router);
 app.use('/orders', orderRoutes);
-app.use("/user",userRoute)
+app.use("/user",userRoute);
+app.use("/post",postrRoute);
+
+
 app.use((req, res, next) => {
     const error = new Error('Not found');
     error.status = 404;

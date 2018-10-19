@@ -31,23 +31,19 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-router.get('/',checkAuth,ProductController.products_get );
+router.get('/',ProductController.products_get );
 
 
 
 
-router.post("/",checkAuth,upload.single("productImage"), ProductController.products_post);
+router.post("/",upload.single("productImage"), ProductController.products_post);
 
 
-router.get("/:productId",checkAuth, ProductController.products_getById);
+router.get("/:productId", ProductController.products_getById);
 
 
 
-router.patch('/:productId',checkAuth, (req, res, next) => {
-    res.status(200).json({
-        message: 'Updated product!'
-    });
-});
+router.patch('/:productId',ProductController.products_update_product);
 
 
 router.delete("/:productId",checkAuth, ProductController.products_delete);

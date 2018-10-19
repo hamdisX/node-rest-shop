@@ -19,7 +19,8 @@ exports.user_signup= (req, res, next) => {
                     })
                 else {
                     const user = new UserModel({
-                        id: new mongoose.Types.ObjectId(),
+                        _id: mongoose.Types.ObjectId(),
+                       id:req.body.id,
                         username:req.body.username,
                         email: req.body.email,
                         password: hash
@@ -52,6 +53,11 @@ exports.user_delete=(req, res) => {
     )
         .catch(err => res.status(500).json(err))
 }
+
+exports.user_deleteAll=(req, res) => {
+    UserModel.remove()
+}
+
 
 exports.user_login= (req, res) => {
     UserModel.find({ email: req.body.email })
@@ -101,8 +107,8 @@ exports.user_get=(req,res)=>{
 
 
 exports.user_getById=(req, res, next) => {
-    const id = req.params.usrId;
-    UserModel.find({id:id})
+    const id = req.params.id;
+    UserModel.findById({id:id})
       .exec()
       .then(doc => {
         console.log("From database", doc);

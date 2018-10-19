@@ -3,7 +3,7 @@ const Product = require("../models/product")
 const mongoose = require ("mongoose")
 const multer = require('multer');
 
-
+//------------- get all products -------------------------------------
 exports.products_get=(req, res, next) => {
     console.log("req1 ",req.cookies)
       Product.find()
@@ -34,6 +34,8 @@ exports.products_get=(req, res, next) => {
   
   }
 
+
+  //-----------------add product --------------------------------------
   exports.products_post=(req, res, next) => {
     //console.log(req.file)
     const product = new Product({
@@ -58,6 +60,8 @@ exports.products_get=(req, res, next) => {
       });
   }
 
+
+  // ----------------------get single product --------------------------
   exports.products_getById=(req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
@@ -78,6 +82,7 @@ exports.products_get=(req, res, next) => {
       });
   }
 
+  //----------------------------- delete product--------------------------
   exports.products_delete=(req, res, next) => {
     const id = req.params.productId;
     Product.remove({ _id: id })
@@ -92,3 +97,37 @@ exports.products_get=(req, res, next) => {
         });
       });
   }
+
+
+  //--------------------- update product ----------------------------
+
+  exports.products_update_product = (req, res, next) => {
+    const id = req.params.productId;
+    const updateOps = {};
+    console.log('req.body',req.body)
+    // for (const ops of req.body) {
+    //   console.log('req.body',req.body)
+    //   console.log('ops.value',ops)
+    //   updateOps[ops.propName] = ops.value;
+    // }
+    console.log('updateOps',updateOps)
+    Product.update({ _id: id }, { $set: {name:req.body.name,price:req.body.price} })
+      .exec()
+      .then(result => {
+        res.status(200).json({
+          message: "Product updated",
+          request: {
+            type: "GET",
+            url: "http://localhost:5000/products/" + id
+          },
+          result
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({
+          error: err
+        });
+      });
+  };
+  
